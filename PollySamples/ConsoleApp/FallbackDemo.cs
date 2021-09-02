@@ -15,7 +15,7 @@ namespace ConsoleApp
 
 			// define the policy
 			var fallbackPolicy = Policy<string>
-					.Handle<Exception>()
+					.HandleResult(r => r == "failure")
 					.FallbackAsync<string>(
 						fallbackValue: "Fallback value",
 						onFallbackAsync: async x => Console.WriteLine("\tFallback triggered"));
