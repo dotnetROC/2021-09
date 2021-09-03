@@ -14,34 +14,29 @@ namespace ConsoleApp
 			Utils.OutputSectionHeader("Fallback Policy");
 
 			// define the policy
-			var fallbackPolicy = Policy<string>
+			var fallbackPolicy = Policy
 					.Handle<Exception>()
-					.FallbackAsync<string>(
-						fallbackValue: "Fallback value",
-						onFallbackAsync: async x => Console.WriteLine("\tFallback triggered"));
+					.OrResult<HttpResponseMessage>(r => !r.IsSuccessStatusCode)
+					.FallbackAsync<HttpResponseMessage>(
+						fallbackValue: new HttpResponseMessage(System.Net.HttpStatusCode.OK) {
+								Content = new StringContent("FALLBACK RESULT!")
+						},
+						onFallbackAsync: async e => { Console.WriteLine("\tFallback triggered"); }
+					);
 
 			for (int i = 0; i < 10; i++)
 			{
 				// execute using the policy
 				var result = await fallbackPolicy
-						.ExecuteAsync(async () => await InvokeFallbackEndpoint(httpClient).ConfigureAwait(false))
+						.ExecuteAsync(async () => await httpClient.GetAsync("fallback").ConfigureAwait(false))
 						.ConfigureAwait(false);
 
-				Console.WriteLine($"Attempt #{i}: '{result}'");
+				var content = await result.Content.ReadAsStringAsync().ConfigureAwait(false);
+				Console.WriteLine($"Attempt #{i}: '{content}'");
 				Thread.Sleep(500);
 			}
 
 			Utils.WaitToProceed();
-		}
-
-		static async Task<string> InvokeFallbackEndpoint(HttpClient http)
-		{
-			// invoke endpoint that randomly fails
-			var result = await http.GetAsync("fallback");
-
-			return result.IsSuccessStatusCode
-					? await result.Content.ReadAsStringAsync().ConfigureAwait(false)
-					: "failure";
 		}
 	}
 }
