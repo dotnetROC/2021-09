@@ -17,14 +17,19 @@ namespace ConsoleApp
 		{
 			_http = new HttpClient
 			{
-				BaseAddress = new Uri("http://localhost:6038/"),
+				//BaseAddress = new Uri("http://localhost:6038/"),
+				BaseAddress = new Uri("https://jsonplaceholder.typicode.com/"),
 				Timeout = TimeSpan.FromSeconds(2)
 			};
 
 			Console.WriteLine($"{Utils.DoubleDivider}\nTesting Polly.NET Policies!\n{Utils.DoubleDivider}");
 			Utils.WaitToProceed();
 
-			await FallbackDemo.Run(_http);
+			//await FallbackDemo.Run(_http);
+			await RetryDemo.Run(_http);
+
+
+			Utils.WaitToProceed();
 		}
 	}
 }

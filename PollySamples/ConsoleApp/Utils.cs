@@ -17,5 +17,27 @@ namespace ConsoleApp
 			Console.WriteLine("\nPress any key to continue...\n");
 			Console.ReadKey();
 		}
+
+		public static void WriteError(string msg)
+		{
+			ColoredWriteLine(msg, ConsoleColor.Red);
+		}
+
+		public static void WriteWarning(string msg)
+		{
+			ColoredWriteLine(msg, ConsoleColor.Yellow);
+		}
+
+		public static void WriteSuccess(string msg)
+		{
+			ColoredWriteLine(msg, ConsoleColor.Green);
+		}
+
+		private static void ColoredWriteLine(string msg, ConsoleColor color)
+		{
+			Console.ForegroundColor = color;
+			Console.WriteLine(msg);
+			Console.ResetColor();
+		}
 	}
 }
