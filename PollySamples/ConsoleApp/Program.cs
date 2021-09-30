@@ -26,7 +26,11 @@ namespace ConsoleApp
 
 			// demos
 			await RetryDemo.Run(_http);
+
 			await FallbackDemo.Run(_http);
+			
+			await WaitAndRetryDemo.Run(_http);
+			await WaitAndRetryDemo.RunWithExponentialBackoff(_http);
 
 
 			Utils.WaitToProceed();
