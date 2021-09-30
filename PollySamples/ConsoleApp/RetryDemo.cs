@@ -27,13 +27,6 @@ namespace ConsoleApp
 							Utils.WriteWarning($"\tCall failed; retry attempt {retryCount}"); 
 					});
 
-			// define some choas
-			var badResponse = new HttpResponseMessage(HttpStatusCode.BadRequest);
-			var chaosPolicy = MonkeyPolicy.InjectResultAsync<HttpResponseMessage>(with =>
-				with.Result(badResponse)
-					.InjectionRate(0.5)
-					.Enabled());
-
 			// execute operation
 			Random rand = new Random();
 			for (int i = 0; i < 5; i++)
@@ -41,12 +34,15 @@ namespace ConsoleApp
 				Console.WriteLine($"API Call #{i+1}:");
 
 				var response = await retryPolicy
-						.WrapAsync(chaosPolicy)
-						.ExecuteAsync(async () => await httpClient.GetAsync($"/users/{rand.Next(1, 10)}").ConfigureAwait(false));
+						.WrapAsync(Utils.GetHttpChoas())
+						.ExecuteAsync(async () => await httpClient.GetAsync($"/users/{rand.Next(1, 10)}").ConfigureAwait(false))
+						.ConfigureAwait(false);
 
 				if (response.IsSuccessStatusCode)
 				{
-					var data = JsonConvert.DeserializeObject<User>(await response.Content.ReadAsStringAsync().ConfigureAwait(false));
+					var data = JsonConvert
+							.DeserializeObject<User>(await response.Content.ReadAsStringAsync()
+							.ConfigureAwait(false));
 					Utils.WriteSuccess($"\tData: {data}");
 				}
 				else

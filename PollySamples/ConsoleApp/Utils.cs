@@ -1,4 +1,9 @@
-﻿using System;
+﻿using Polly.Contrib.Simmy;
+using Polly.Contrib.Simmy.Outcomes;
+
+using System;
+using System.Net;
+using System.Net.Http;
 
 namespace ConsoleApp
 {
@@ -16,6 +21,17 @@ namespace ConsoleApp
 		{
 			Console.WriteLine("\nPress any key to continue...\n");
 			Console.ReadKey();
+		}
+
+		public static AsyncInjectOutcomePolicy<HttpResponseMessage> GetHttpChoas(double injectionRate = 0.5)
+		{
+			var badResponse = new HttpResponseMessage(HttpStatusCode.BadRequest);
+			var chaosPolicy = MonkeyPolicy.InjectResultAsync<HttpResponseMessage>(with =>
+				with.Result(badResponse)
+					.InjectionRate(injectionRate)
+					.Enabled());
+
+			return chaosPolicy;
 		}
 
 		public static void WriteError(string msg)

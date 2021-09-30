@@ -8,16 +8,15 @@ namespace ConsoleApp
 	{
 		static HttpClient _http;
 
-		static void Main(string[] args)
+		static async Task Main(string[] args)
 		{
-			RunDemo().GetAwaiter().GetResult();
+			await RunDemo().ConfigureAwait(false);
 		}
 
 		static async Task RunDemo()
 		{
 			_http = new HttpClient
 			{
-				//BaseAddress = new Uri("http://localhost:6038/"),
 				BaseAddress = new Uri("https://jsonplaceholder.typicode.com/"),
 				Timeout = TimeSpan.FromSeconds(2)
 			};
@@ -25,8 +24,9 @@ namespace ConsoleApp
 			Console.WriteLine($"{Utils.DoubleDivider}\nTesting Polly.NET Policies!\n{Utils.DoubleDivider}");
 			Utils.WaitToProceed();
 
-			//await FallbackDemo.Run(_http);
+			// demos
 			await RetryDemo.Run(_http);
+			await FallbackDemo.Run(_http);
 
 
 			Utils.WaitToProceed();
