@@ -6,7 +6,6 @@ namespace ConsoleApp
 {
 	static class Program
 	{
-		static HttpClient _http;
 
 		static async Task Main(string[] args)
 		{
@@ -15,7 +14,7 @@ namespace ConsoleApp
 
 		static async Task RunDemo()
 		{
-			_http = new HttpClient
+			HttpClient http = new HttpClient
 			{
 				BaseAddress = new Uri("https://jsonplaceholder.typicode.com/"),
 				Timeout = TimeSpan.FromSeconds(2)
@@ -25,13 +24,14 @@ namespace ConsoleApp
 			Utils.WaitToProceed();
 
 			// demos
-			await RetryDemo.Run(_http);
+			await RetryDemo.Run(http);
 
-			await FallbackDemo.Run(_http);
+			await FallbackDemo.Run(http);
 			
-			await WaitAndRetryDemo.Run(_http);
-			await WaitAndRetryDemo.RunWithExponentialBackoff(_http);
+			await WaitAndRetryDemo.Run(http);
+			await WaitAndRetryDemo.RunWithExponentialBackoff(http);
 
+			await CircuitBreakerDemo.Run(http);
 
 			Utils.WaitToProceed();
 		}

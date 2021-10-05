@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 using Newtonsoft.Json;
 using Polly;
-using Polly.Contrib.Simmy;
-using Polly.Contrib.Simmy.Outcomes;
 
 using ConsoleApp.Models;
 
