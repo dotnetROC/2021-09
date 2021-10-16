@@ -24,14 +24,16 @@ namespace ConsoleApp
 			Utils.WaitToProceed();
 
 			// demos
-			await RetryDemo.Run(http);
+			//await RetryDemo.Run(http);
 
-			await FallbackDemo.Run(http);
+			//await FallbackDemo.Run(http);
 			
-			await WaitAndRetryDemo.Run(http);
-			await WaitAndRetryDemo.RunWithExponentialBackoff(http);
+			//await WaitAndRetryDemo.Run(http);
+			//await WaitAndRetryDemo.RunWithExponentialBackoff(http);
 
-			await CircuitBreakerDemo.Run(http);
+			//await CircuitBreakerDemo.Run(http);
+
+			await CachePolicyDemo.Run(http);
 
 			Utils.WaitToProceed();
 		}

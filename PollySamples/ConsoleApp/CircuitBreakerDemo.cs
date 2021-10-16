@@ -58,9 +58,8 @@ namespace ConsoleApp
 
 						if (response.IsSuccessStatusCode)
 						{
-							var data = JsonConvert
-									.DeserializeObject<User>(await response.Content.ReadAsStringAsync()
-									.ConfigureAwait(false));
+							var data = JsonConvert.DeserializeObject<User>(
+									await response.Content.ReadAsStringAsync().ConfigureAwait(false));
 
 							Utils.WriteSuccess($"\t\tData: {data}");
 							break;
